@@ -7,26 +7,30 @@
 //
 
 import UIKit
-import AudioToolbox
+import AVFoundation
+//import AudioToolbox
 
-class ViewController: UIViewController {
-        
+class ViewController: UIViewController, AVAudioPlayerDelegate {
 
-    let noteArray = ["note1", "note2", "note3", "note4", "note5", "note6", "note7"]
+    var audioPlayer : AVAudioPlayer!
     
+    let noteArray = ["note1", "note2", "note3", "note4", "note5", "note6", "note7"]
+
     @IBAction func notePressed(_ sender: UIButton) {
 
+        var noteIndex : Int
+        noteIndex = sender.tag - 1
         
+        let soundURL = Bundle.main.url(forResource: noteArray[noteIndex], withExtension: "wav")
         
-        var noteTouched : Int
-        noteTouched = sender.tag - 1
-        
-        if let soundURL = Bundle.main.url(forResource: noteArray[noteTouched], withExtension: "wav") {
-            var mySound: SystemSoundID = 0
-            AudioServicesCreateSystemSoundID(soundURL as CFURL, &mySound)
-            // Play
-            AudioServicesPlaySystemSound(mySound);
+        do {
+        try audioPlayer = AVAudioPlayer(contentsOf: soundURL!)
         }
+        catch {
+            print(error)
+        }
+        
+        audioPlayer.play()
        
     }
     
